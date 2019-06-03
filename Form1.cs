@@ -108,9 +108,15 @@ namespace MlpProject
             }
             #endregion
 
-            #region mushroom dataset
+            #region breast cancer dataset
             else if (dataSetId == 1)
             {
+                inputMax = 10;
+                inputMin = 0;
+                inputCount = 9;
+                outputCount = 1;
+                outputMax = 4;
+                outputMin = 2;
                 string data = System.IO.File.ReadAllText(inputPath).Replace("\r", "").Replace("\"", "");//.Replace(",", ".");
                 string[] row = data.Split(Environment.NewLine.ToCharArray());
                 for (int i = 0; i < row.Length - 1; i++)
@@ -122,16 +128,16 @@ namespace MlpProject
                         double[] inputs = new double[inputCount];
                         double[] outputs = new double[outputCount];
 
-                        for (int j = 0; j < rowData.Length - 1; j++)
+                        for (int j = 0; j < rowData.Length; j++)
                         {
-                            if (j < inputCount)
+                            if (j > 0 && j < inputCount)
                             {
-                                inputs[j] = normalize(double.Parse(rowData[j]), inputMin, inputMax);
+                                inputs[j-1] = normalize(double.Parse(rowData[j]), inputMin, inputMax);
                                 // Console.WriteLine(inputs[j]);
                             }
                             else
                             {
-                                outputs[j - inputCount] = normalize(double.Parse(rowData[j]), outputMin, outputMax);
+                                outputs[0] = normalize(double.Parse(rowData[j]), outputMin, outputMax);
                                 //Console.WriteLine(outputs[j - inputCount]);
                             }
                         }
@@ -147,16 +153,16 @@ namespace MlpProject
                         double[] inputs = new double[inputCount];
                         double[] outputs = new double[outputCount];
 
-                        for (int j = 0; j < rowData.Length - 1; j++)
+                        for (int j = 1; j < rowData.Length; j++)
                         {
-                            if (j < inputCount)
+                            if (j > 0 && j < inputCount+1)
                             {
-                                inputs[j] = normalize(double.Parse(rowData[j]), inputMin, inputMax);
+                                inputs[j-1] = normalize(double.Parse(rowData[j]), inputMin, inputMax);
                                 // Console.WriteLine(inputs[j]);
                             }
                             else
                             {
-                                outputs[j - inputCount] = double.Parse(rowData[j]);
+                                outputs[0] = double.Parse(rowData[j]);
                                 //Console.WriteLine(outputs[j - inputCount]);
                             }
                         }
@@ -347,11 +353,13 @@ namespace MlpProject
 
         private void button1_Click(object sender, EventArgs e)
         {
+            #region Variables
+
             if (radioButtonIris.Checked)
             {
                 inputPath = @"..\..\..\MlpProject\Datasets\iris.csv";
                 outputPath = @"..\..\..\MlpProject\Datasets\irisout.csv";
-                neuralNetworkPath = @"..\..\..\MlpProject\Datasets\Iris.bin";
+                neuralNetworkPath = @"..\..\..\MlpProject\Datasets\IrisTraining.bin";
                 inputMax = 10;
                 inputMin = 0;
                 outputMax = 3;
@@ -360,9 +368,9 @@ namespace MlpProject
             }
             else if (radioButtonMushroom.Checked)
             {
-                inputPath = @"..\..\..\MlpProject\Datasets\mushroom.csv";
-                outputPath = @"..\..\..\MlpProject\Datasets\mushroomout.csv";
-                neuralNetworkPath = @"..\..\..\MlpProject\Datasets\Mushroom.bin";
+                inputPath = @"..\..\..\MlpProject\Datasets\breastCancer.csv";
+                outputPath = @"..\..\..\MlpProject\Datasets\breastCancerOut.csv";
+                neuralNetworkPath = @"..\..\..\MlpProject\Datasets\breastCancerTraining.bin";
                 inputMax = 10;
                 inputMin = 0;
                 outputMax = 3;
@@ -373,14 +381,13 @@ namespace MlpProject
             {
                 inputPath = @"..\..\..\MlpProject\Datasets\wine.csv";
                 outputPath = @"..\..\..\MlpProject\Datasets\wineout.csv";
-                neuralNetworkPath = @"..\..\..\MlpProject\Datasets\Wine.bin";
+                neuralNetworkPath = @"..\..\..\MlpProject\Datasets\WineTraining.bin";
                 inputMax = 10;
                 inputMin = 0;
                 outputMax = 3;
                 outputMin = 1;
                 datasetId = 2;
             }
-            #region Variables
             Perceptron p;
             int neuronCount1 = 10;
             int neuronCount2 = 10;

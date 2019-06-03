@@ -74,9 +74,9 @@
             this.radioButtonMushroom.AutoSize = true;
             this.radioButtonMushroom.Location = new System.Drawing.Point(4, 38);
             this.radioButtonMushroom.Name = "radioButtonMushroom";
-            this.radioButtonMushroom.Size = new System.Drawing.Size(74, 17);
+            this.radioButtonMushroom.Size = new System.Drawing.Size(92, 17);
             this.radioButtonMushroom.TabIndex = 2;
-            this.radioButtonMushroom.Text = "Mushroom";
+            this.radioButtonMushroom.Text = "Breast Cancer";
             this.radioButtonMushroom.UseVisualStyleBackColor = true;
             // 
             // radioButtonVine
@@ -107,7 +107,7 @@
             this.panel1.Location = new System.Drawing.Point(28, 51);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(1);
-            this.panel1.Size = new System.Drawing.Size(85, 109);
+            this.panel1.Size = new System.Drawing.Size(99, 109);
             this.panel1.TabIndex = 5;
             // 
             // textBoxNeuron1
