@@ -1,0 +1,15 @@
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\bin\Debug\MlpProject.exe.config
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\bin\Debug\MlpProject.exe
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\bin\Debug\MlpProject.pdb
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\obj\Debug\MlpProject.csprojResolveAssemblyReference.cache
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\obj\Debug\MlpProject.Form1.resources
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\obj\Debug\MlpProject.Properties.Resources.resources
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\obj\Debug\MlpProject.csproj.GenerateResource.Cache
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\obj\Debug\MlpProject.exe
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\obj\Debug\MlpProject.pdb
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\bin\Debug\Datasets\iris.csv
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\bin\Debug\Datasets\wine.csv
+C:\Users\Burak\Source\Repos\MlpProject\MlpProject\obj\Debug\MlpProject.Form2.resources
+C:\Users\Burak\Source\Repos\NeuralNetworksMultilayerPerceptron\MlpProject\bin\Debug\MlpProject.exe.config
+C:\Users\Burak\Source\Repos\NeuralNetworksMultilayerPerceptron\MlpProject\obj\Debug\MlpProject.exe
+C:\Users\Burak\Source\Repos\NeuralNetworksMultilayerPerceptron\MlpProject\obj\Debug\MlpProject.pdb

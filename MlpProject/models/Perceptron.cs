@@ -12,7 +12,10 @@ namespace MlpProject.models
     class Perceptron
     {
         List<Layer> layers;
-        List<Tuple<int, double>> results = new List<Tuple<int, double>>();
+        List<Result> results = new List<Result>();
+        public int outputMin = 0;
+        public int outputMax = 0;
+
 
         public Perceptron(int[] neuronsPerlayer)
         {
@@ -53,21 +56,34 @@ namespace MlpProject.models
             return err;
         }
         List<string> log;
-        public bool Learn(List<double[]> input, List<double[]> desiredOutput, double alpha, double maxError, int maxIterations, String net_path = null, int iter_save = 1)
+        public bool Learn(List<double[]> input, List<double[]> desiredOutput, List<double[]> validationInput, List<double[]> validationOutput, double alpha, double maxError, int maxIterations, String net_path = null, int iter_save = 1)
         {
             double err = 99999;
             log = new List<string>();
             int it = maxIterations;
-            while (err > maxError)
+            bool isValid = true;
+            ValidationHistory<double> valHist = new ValidationHistory<double>(3);
+
+            while (err > maxError && isValid)
             {
                 ApplyBackPropagation(input, desiredOutput, alpha);
                 err = GeneralError(input, desiredOutput);
 
 
-                if ((it - maxIterations) % 1000 == 0)
+                if ((it - maxIterations) % 100 == 0)
                 {
-                    Console.WriteLine(err + " iterations: " + (it - maxIterations));
-                    results.Add(new Tuple<int, double>(it - maxIterations, err));
+                    double valRes = validate(validationInput, validationOutput);
+                    results.Add(new Result(it - maxIterations, err, valRes));
+                    Console.WriteLine(err + " iterations: " + (it - maxIterations) + "   Validation result: " + valRes);
+                    if (valHist.Any(x=>x < valRes ))
+                    {
+                        isValid = false;
+                    }
+                    else
+                    {
+                        valHist.Add(valRes);
+                    }
+
                 }
 
 
@@ -83,33 +99,50 @@ namespace MlpProject.models
                 log.Add(err.ToString());
                 maxIterations--;
 
-                //if (Console.KeyAvailable)
-                //{
-                //    System.IO.File.WriteAllLines(@"Debug.txt", log.ToArray());
-                //    return true;
-                //}
-
-                if (maxIterations <= 0)
-                {
-                    Console.WriteLine("Input Error");
-                    System.IO.File.WriteAllLines(@"Debug.txt", log.ToArray());
-                    return false;
-                }
-
             }
 
             System.IO.File.WriteAllLines(@"Debug.txt", log.ToArray());
             return true;
         }
 
-        public List<Tuple<int, double>> returnResults()
+        public List<Result> returnResults()
         {
             return results;
         }
+        public double validate(List<double[]> validationInput, List<double[]> validationOutput)
+        {
+            double accuracy = 0;
+            double correctMatch = validationInput.Count;
+            double[] correctClass = new double[validationInput.Count];
+            double[] resultClass = new double[validationInput.Count];
+            for (int j = 0; j < validationInput.Count; j++)
+            {
+                double[] val = validationInput[j];
+                double[] valLabel = validationOutput[j];
+                double[] sal = Activate(val);
 
+
+                resultClass[j] = Math.Round(inverseNormalize(sal[0], outputMin, outputMax), MidpointRounding.AwayFromZero);
+                correctClass[j] = Math.Round(inverseNormalize(valLabel[0], outputMin, outputMax), MidpointRounding.AwayFromZero);
+           }
+            for (int k = 0; k < validationInput.Count; k++)
+            {
+                if (correctClass[k] != resultClass[k])
+                {
+                    correctMatch--;
+                }
+            }
+            accuracy = correctMatch / validationInput.Count;
+            return (1 - accuracy);
+        }
 
         List<double[]> sigmas;
         List<double[,]> deltas;
+
+        double inverseNormalize(double val, double min, double max)
+        {
+            return val * (max - min) + min;
+        }
 
         void SetSigmas(double[] desiredOutput)
         {

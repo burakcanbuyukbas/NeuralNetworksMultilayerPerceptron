@@ -62,6 +62,8 @@
     <Compile Include="models\Layer.cs" />
     <Compile Include="models\Neuron.cs" />
     <Compile Include="models\Perceptron.cs" />
+    <Compile Include="models\Result.cs" />
+    <Compile Include="models\ValidationHistory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

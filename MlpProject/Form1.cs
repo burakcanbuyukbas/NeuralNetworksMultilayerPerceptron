@@ -34,15 +34,19 @@ namespace MlpProject
         static double inputMax = 10;
         static double inputMin = 0;
 
-        static double outputMax = 3;
-        static double outputMin = 1;
+        static int outputMax = 3;
+        static int outputMin = 1;
 
         static List<double[]> input = new List<double[]>();
         static List<double[]> output = new List<double[]>();
+        static List<double[]> validationInput = new List<double[]>();
+        static List<double[]> validationOutput = new List<double[]>();
+        static List<double[]> trainInput = new List<double[]>();
+        static List<double[]> trainOutput = new List<double[]>();
         static List<double[]> test = new List<double[]>();
         static List<double[]> testOutput = new List<double[]>();
 
-        List<Tuple<int, double>> results = new List<Tuple<int, double>>();
+        List<Result> results = new List<Result>();
         int datasetId;
 
         static void ReadData(int dataSetId)
@@ -351,6 +355,38 @@ namespace MlpProject
             System.IO.File.WriteAllText(outputPath, output);
         }
 
+        static void DecomposeSets()
+        {
+            int k = 0;
+            int j = 0;
+            foreach (double[] arr in input)
+            {
+                if (k % 7 == 0 || k % 9 == 0)
+                {
+                    validationInput.Add(arr);
+                }
+                else
+                {
+                    trainInput.Add(arr);
+                }
+                k++;
+            }
+
+            foreach (double[] arr in output)
+            {
+                if (j % 7 == 0 || j % 9 == 0)
+                {
+                    validationOutput.Add(arr);
+                }
+                else
+                {
+                    trainOutput.Add(arr);
+                }
+                j++;
+            }
+
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             #region Variables
@@ -422,9 +458,12 @@ namespace MlpProject
             if (loadNetwork)
             {
                 ReadData(datasetId);
-                p = new Perceptron(net_def);
+                DecomposeSets();
 
-                while (!p.Learn(input, output, learning_rate, max_error, max_iter, neuralNetworkPath, 10000))
+                p = new Perceptron(net_def);
+                p.outputMin = outputMin;
+                p.outputMax = outputMax;
+                while (!p.Learn(trainInput, trainOutput, validationInput, validationOutput, learning_rate, max_error, max_iter, neuralNetworkPath, 10000))
                 {
                     p = new Perceptron(net_def);
                 }
@@ -436,31 +475,36 @@ namespace MlpProject
             }
 
 
-            //double[] val = new double[inputCount];
-            //val[0] = 5.9;
-            //val[1] = 3.0;
-            //val[2] = 5.1;
-            //val[3] = 1.8;
-            //for (int i = 0; i < inputCount; i++)
-            //{
-            //    Console.WriteLine("Input value " + i + ": ");
-            //    val[i] = normalize(double.Parse(Console.ReadLine()), inputMin, inputMax);
-            //}
             string resultsString = "";
+            double accuracy = 0;
+            double correctMatch = test.Count;
+            double[] correctClass = new double[test.Count];
+            double[] resultClass = new double[test.Count];
             for (int j = 0; j < test.Count; j++)
             {
                 double[] val = test[j];
                 double[] valLabel = testOutput[j];
                 double[] sal = p.Activate(val);
+
                 for (int i = 0; i < outputCount; i++)
                 {
+                    resultClass[j] = Math.Round(inverseNormalize(sal[i], outputMin, outputMax), MidpointRounding.AwayFromZero);
+                    correctClass[j] = valLabel[0];
                     resultsString += "& Output: " + Math.Round(inverseNormalize(sal[i], outputMin, outputMax), MidpointRounding.AwayFromZero) + " for " + valLabel[0];
                     Console.Write("Output " + i + ": " + inverseNormalize(sal[i], outputMin, outputMax) + " for " + valLabel[0]);
                 }
                 Console.WriteLine("");
             }
+            for (int k = 0; k < test.Count; k++)
+            {
+                if(correctClass[k] != resultClass[k])
+                {
+                    correctMatch--;
+                }
+            }
+            accuracy = correctMatch / test.Count * 100;
 
-            Form2 form2 = new Form2(results, resultsString.Substring(2, resultsString.Length - 2));
+            Form2 form2 = new Form2(results, resultsString.Substring(2, resultsString.Length - 2), accuracy);
             form2.Show();
 
         }
